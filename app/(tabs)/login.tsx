@@ -58,6 +58,7 @@ export default function LoginScreen() {
             <ThemedText>User, welcome to our app! Please, sign in to access all the premium features</ThemedText>
             <ThemedView style={styles.inputContainer}>
               <TextInput
+                testID="username" // Corrected prop name
                 style={styles.input}
                 placeholder="Username"
                 placeholderTextColor="#808080"
@@ -65,6 +66,7 @@ export default function LoginScreen() {
                 onChangeText={(text: any) => setUsername(text)}
               />
               <TextInput
+                testID="password" // Corrected prop name
                 style={styles.input}
                 placeholder="Password"
                 placeholderTextColor="#808080"
