@@ -1,0 +1,15 @@
+appId: com.yourcompany.tutorialmaestro
+---
+- launchApp
+- tapOn: "Login.*"
+- assertVisible: "User, welcome to our app!.*"
+- tapOn: 
+    id: 'username'
+- inputText: "foo"
+- pressKey: "enter"
+- tapOn: 
+    id: 'password'
+- inputText: "bar"
+- pressKey: "enter"
+- tapOn: "Sign-in"
+- assertVisible: "Wrong credentials! Please, try again."
