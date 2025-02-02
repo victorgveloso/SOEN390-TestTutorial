@@ -1,0 +1,4 @@
+appId: com.yourcompany.tutorialmaestro
+---
+- launchApp
+- assertVisible: "Welcome!"
