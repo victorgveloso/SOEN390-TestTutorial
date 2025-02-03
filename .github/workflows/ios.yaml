@@ -5,8 +5,7 @@ on:
     branches: [main, cicd]
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main, cicd]
 
 jobs:
   expo-go-dev-maestro-router:
@@ -33,11 +32,6 @@ jobs:
 
       - name: Install dependencies
         run: YARN_IGNORE_SCRIPTS=true yarn --frozen-lockfile
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
 
       - name: Install Maestro
         run: |
