@@ -1,4 +1,4 @@
-name: Router Maestro E2E
+name: Router Maestro E2E Android
 
 on:
   pull_request:
@@ -8,8 +8,8 @@ on:
     branches: [main, cicd]
 
 jobs:
-  expo-go-dev-maestro-router:
-    runs-on: macos-latest
+  expo-dev-client-maestro-android:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -39,13 +39,12 @@ jobs:
       - name: Install dependencies
         run: YARN_IGNORE_SCRIPTS=true yarn --frozen-lockfile
 
-      - name: 📱 Run instrumented unit tests
+      - name: 📱 Install Android Emulator
         timeout-minutes: 80
         uses: ./.github/actions/use-android-emulator
         with:
           avd-api: 34
           avd-name: avd-34
-          script: expotools android-native-unit-tests --type instrumented
 
       - name: Install Maestro
         run: |
