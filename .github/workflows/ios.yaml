@@ -37,11 +37,10 @@ jobs:
           path: |
             node_modules
             ios/Pods
-	  key: ${{ runner.os }}-deps-${{ hashFiles('package-lock.json', 'ios/Podfile.lock') }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('package-lock.json', 'ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-deps-${{ hashFiles('package-lock.json', 'ios/Podfile.lock') }}
-            ${{ runner.os }}-deps-
-
+            
       - name: Install dependencies
         run: YARN_IGNORE_SCRIPTS=true yarn --frozen-lockfile
 
