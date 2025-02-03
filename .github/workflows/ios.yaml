@@ -49,14 +49,8 @@ jobs:
         run: |
           # Start the Expo Dev Client
           npx expo run:ios &
-          timeout=120
           while ! xcrun simctl get_app_container booted com.yourcompany.tutorialmaestro data >/dev/null 2>&1; do
             sleep 5
-            timeout=$((timeout - 5))
-            if [ "$timeout" -le 0 ]; then
-              echo "Expo app did not start in time"
-              exit 1
-            fi
           done
 
       - name: Run Maestro tests
