@@ -36,3 +36,12 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# build files
+android
+ios
+# test temporary files
+.logs
+artifact
+*.mp4
+report.xml
