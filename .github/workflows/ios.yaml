@@ -45,6 +45,13 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
+      - name: ♻️ Restore Expo Cache
+        id: expo-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/{.expo,ios,android,node_modules}
+          key: ${{ runner.os }}-expo-cache-
+
       - name: Start Expo Dev Client
         run: |
           # Start the Expo Dev Client
@@ -52,6 +59,12 @@ jobs:
           while ! xcrun simctl get_app_container booted com.yourcompany.tutorialmaestro data >/dev/null 2>&1; do
             sleep 5
           done
+
+      - name: ♻️ Save Expo Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ~/{.expo,ios,android,node_modules}
+          key: ${{ runner.os }}-expo-cache-
 
       - name: Run Maestro tests
         env:
@@ -66,6 +79,16 @@ jobs:
         with:
           name: e2e_report
           path: report.xml
+
+      - name: Publish Test Report
+        if: ${{ success() || failure() }}
+        uses: dorny/test-reporter@v1
+        with:
+          name: 'Unit Test Results'
+          path: 'report.xml'
+          reporter: 'java-junit'
+          list-tests: failed
+          fail-on-error: false
 
       - name: Record Maestro tests
         if: ${{ success() }}
