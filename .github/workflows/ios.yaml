@@ -37,7 +37,7 @@ jobs:
           path: |
             node_modules
             ios/Pods
-          key: ${{ runner.os }}-deps-${{ hashFiles('yarn.lock', 'ios/Podfile.lock') }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-deps-
 
