@@ -33,6 +33,12 @@ jobs:
       - name: Install dependencies
         run: YARN_IGNORE_SCRIPTS=true yarn --frozen-lockfile
 
+      - name: Launch iOS Simulator
+        uses: futureware-tech/simulator-action@v4
+        with:
+          device: 'iPhone 15'
+          runtime: '18.2'
+
       - name: Install Maestro
         run: |
           export MAESTRO_VERSION=1.39.9
@@ -43,7 +49,15 @@ jobs:
         run: |
           # Start the Expo Dev Client
           npx expo run:ios &
-          sleep 10
+          timeout=120
+          while ! xcrun simctl get_app_container booted com.yourcompany.tutorialmaestro data >/dev/null 2>&1; do
+            sleep 5
+            timeout=$((timeout - 5))
+            if [ "$timeout" -le 0 ]; then
+              echo "Expo app did not start in time"
+              exit 1
+            fi
+          done
 
       - name: Run Maestro tests
         env:
