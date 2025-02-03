@@ -5,7 +5,7 @@ on:
     branches: [main, cicd]
   workflow_dispatch:
   push:
-    branches: [main, cicd]
+    branches: [main, cicd, pourya-ci]
 
 jobs:
   expo-go-dev-maestro-router:
@@ -29,6 +29,16 @@ jobs:
           key: ${{ runner.os }}-yarn-cache-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-cache-
+
+      - name: ♻️ Restore npm and CocoaPods Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ios/Pods
+          key: ${{ runner.os }}-deps-${{ hashFiles('yarn.lock', 'ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
 
       - name: Install dependencies
         run: YARN_IGNORE_SCRIPTS=true yarn --frozen-lockfile
