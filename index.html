@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing React Native Apps Tutorial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding: 0 20px;
+      max-width: 960px;
+      margin: auto;
+      color: #333;
+    }
+    header, section, footer {
+      margin-bottom: 40px;
+    }
+    header h1 {
+      font-size: 2.5em;
+      margin-bottom: 0;
+    }
+    header h2 {
+      font-size: 1.5em;
+      font-weight: normal;
+      color: #666;
+      margin-top: 0;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline;
+      margin-right: 15px;
+    }
+    nav a {
+      text-decoration: none;
+      color: #007acc;
+    }
+    .section-title {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ddd;
+      overflow-x: auto;
+    }
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Testing React Native Apps</h1>
+    <h2>SOEN 390, Concordia University<br>by Victor Guerra Veloso</h2>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#slides">Slides</a></li>
+      <li><a href="#transcript">Transcript</a></li>
+      <li><a href="#demos">Demos</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#contact">Questions?</a></li>
+    </ul>
+  </nav>
+
+  <section id="overview">
+    <h2 class="section-title">Overview</h2>
+    <p>
+      This repository provides a comprehensive introduction to <strong>Testing React Native Applications</strong>. Throughout this course, we explore industry-grade tools, best practices, and methodologies to ensure the stability, reliability, and maintainability of mobile applications. We cover various testing layers, including unit, integration, UI, and end-to-end (E2E) tests, with special attention to real-world constraints and how to overcome common issues such as test flakiness.
+    </p>
+    <p>
+      Subsequent sections include detailed slides focusing on the test pyramid, justifications for UI and E2E testing, and the distinctive challenges encountered in mobile testing—particularly those involving physical device limitations, diverse operating systems, and hardware variability.
+    </p>
+  </section>
+
+  <section id="slides">
+    <h2 class="section-title">Slides Content</h2>
+    <h3>Test Pyramid & Advanced Considerations</h3>
+    <ul>
+      <li>Write few UI tests</li>
+      <li>Avoid corner/edge cases</li>
+      <li>Focus on critical scenarios</li>
+      <li>One complete Happy path</li>
+      <li>One simple Exception Testing</li>
+    </ul>
+    <p><strong>UI Tests:</strong></p>
+    <ul>
+      <li>Closer to reality (no mocking)</li>
+      <li>Slower and expensive to execute</li>
+      <li>Less often executed (e.g., nightly builds)</li>
+      <li>Require more maintenance</li>
+      <li>Sometimes Flaky</li>
+    </ul>
+    <p>
+      <em>Reference:</em> The Test Pyramid, source: martinfowler.com.<br>
+      By maintaining fewer, more focused UI tests, we reduce the likelihood of flaky outcomes and slow feedback loops.
+    </p>
+
+    <h3>Why End-to-End Testing?</h3>
+    <p>
+      UI Testing gives customers confidence that the product will work as intended in real case scenarios.
+    </p>
+
+    <h3>Why Test React Native Apps?</h3>
+    <ul>
+      <li>Crashes are the second reason users uninstall apps [ICSOB'17]</li>
+      <li>Mobile is complex</li>
+      <li>Many sensors are hard to simulate or mock (for unit testing)</li>
+      <li>Virtual Keyboard takes space on the screen</li>
+      <li>Mobile app is a diversified platform</li>
+      <li>Virtual keyboards and sensors require more sophisticated test orchestration.</li>
+    </ul>
+    <p><strong>Challenges:</strong></p>
+    <ul>
+      <li>Several screen sizes</li>
+      <li>Different OSes</li>
+      <li>Theming and custom UI branding (Samsung’s One UI)</li>
+      <li>Constrained resource devices may have subpar performance</li>
+      <li>Android is famous for releasing breaking changes</li>
+    </ul>
+
+    <h3>Main Testing Challenge: Flakiness</h3>
+    <ul>
+      <li>Caused by memory issues, concurrency issues, test execution order dependency</li>
+    </ul>
+    <p>
+      <em>Trivia:</em> Microsoft estimated that flaky tests cost them $1.14 million per year in developer time.<br>
+      <em>Reference:</em> browserstack.com
+    </p>
+
+    <h3>What's Wrong with Snapshot Testing?</h3>
+    <ul>
+      <li>Weaker snapshot testing types are used to avoid false alarms</li>
+      <li>Whole screen snapshot testing vs. component snapshot testing</li>
+      <li>Jest snapshot testing compares components’ internal representations</li>
+    </ul>
+    <p>
+      <strong>Questions Raised:</strong><br>
+      What is the value snapshot testing brings? Are they only checking for changes?<br>
+      <strong>Challenges:</strong> Pixel perfect issues, hardware configurations, dark/light mode differences, etc.
+    </p>
+
+    <h3>What is Detox?</h3>
+    <p>
+      Detox is a gray-box testing framework that manages synchronization at runtime to reduce flaky tests. By injecting code into debug-mode builds, it can automatically coordinate app state and test execution. However, this approach can introduce discrepancies between debug and release builds.
+    </p>
+    <p><strong>Operations:</strong> waitFor(X), sleep(Y)</p>
+    <p>
+      <strong>Cons:</strong><br>
+      - Requires access to the native app project (defeating some benefits of Expo Go)<br>
+      - Introduces discrepancies between test and release builds<br>
+      - May introduce bugs exclusive to the release version
+    </p>
+
+    <h3>What is Maestro?</h3>
+    <p>
+      Maestro is a cross-platform E2E testing solution recommended by Expo. It aims to provide a straightforward setup process, streamlined test writing, and broad support for both iOS and Android. Its minimal reliance on native code integrations often helps address common pitfalls in mobile testing.
+    </p>
+
+    <h3>E2E Testing with Maestro</h3>
+    <p><strong>Demos:</strong></p>
+    <ul>
+      <li>
+        <strong>1st Demo (Maestro CLI):</strong> Clone the repository at <a href="https://github.com/victorgveloso/SOEN390-TestTutorial" target="_blank">GitHub</a> and follow the instructions in README.md.
+      </li>
+      <li>
+        <strong>2nd Demo (Flutter E2E in CI/CD):</strong> Visit <a href="https://github.com/pouryafard75/tutorial2" target="_blank">this repository</a> and copy <code>e2e-android.yml</code> to <code>.github/workflows/</code>.
+      </li>
+      <li>
+        <strong>3rd Demo:</strong> Writing test cases.
+      </li>
+    </ul>
+    <p><strong>Supported Platforms:</strong> iOS Simulator, Android Emulator, and Real Devices.</p>
+
+    <h3>Other Testing Challenges</h3>
+    <ul>
+      <li>E2E Exclusive: Slow tests, test dependencies</li>
+      <li>Unit test exclusive: Hard-to-test code</li>
+    </ul>
+
+    <h3>Good Practices</h3>
+    <p>
+      Focus on test completeness, quality, and design patterns.
+    </p>
+    <p><strong>Completeness:</strong> Code Coverage, Mutation Testing<br>
+      - Unit Tests: Cover non-trivial code<br>
+      - Integration Tests: Cover all integrations<br>
+      - E2E Tests: Cover critical user stories</p>
+    <p><strong>Quality:</strong> Test smells, size, execution time, and readability.</p>
+    <p><strong>Design Patterns:</strong> Object Mother, Test Data Builder, test fixtures, parameterized tests.</p>
+
+    <h3>Conclusion</h3>
+    <ul>
+      <li>Testing is essential for verifying product quality and detecting regressions.</li>
+      <li>Efficient testing balances cost and benefits.</li>
+      <li>Mobile app testing requires diverse roles, technologies, and techniques.</li>
+      <li>Challenges such as flakiness, slow tests, and dependencies persist.</li>
+    </ul>
+
+    <h3>Key Takeaways &amp; Questions</h3>
+    <p>
+      This tutorial aims to empower you with the best practices and tools for testing your React Native applications. If you have any questions or need clarification on any topic, please feel free to ask!
+    </p>
+  </section>
+
+  <section id="transcript">
+    <h2 class="section-title">Presentation Transcript</h2>
+    <p><strong>Title:</strong> How to Write Tests for React Native Apps<br>
+       <strong>Presenter:</strong> Victor</p>
+    <h3>Topics Covered</h3>
+    <ul>
+      <li><strong>Introduction:</strong> Tools, techniques, and best practices for React Native app testing.</li>
+      <li><strong>Test Types:</strong> From unit tests (fast, isolated) to UI tests (integrated, slower) that focus on critical user scenarios.</li>
+      <li><strong>End-to-End Testing:</strong> Ensuring product functionality as experienced by end users.</li>
+      <li><strong>React Native Testing:</strong> The importance of stable testing due to mobile complexities (crashes, sensor interactions, etc.).</li>
+      <li><strong>Flakiness:</strong> Often caused by concurrency issues, variations in device performance, and unpredictable resource availability. Proper tooling and test design are key to minimizing its impact.</li>
+      <li><strong>Snapshot Testing:</strong> Discusses challenges and limited value.</li>
+      <li><strong>Detox:</strong> A gray-box testing tool with improved synchronization, but with trade-offs.</li>
+      <li><strong>Maestro:</strong> Recommended by Expo for E2E testing across various platforms.</li>
+      <li><strong>CI/CD Integration:</strong> Using GitHub Actions with Maestro for automated testing workflows.</li>
+      <li><strong>Detox & Maestro:</strong> Approaches to address mobile-specific testing risks while retaining coverage closer to real user conditions.</li>
+    </ul>
+  </section>
+
+  <section id="demos">
+    <h2 class="section-title">Get Started with the Demos</h2>
+    <p>
+      To get hands-on experience, clone the repository and follow the demo instructions:
+    </p>
+    <ul>
+      <li>
+        <strong>Maestro CLI Demo:</strong> <a href="https://github.com/victorgveloso/SOEN390-TestTutorial" target="_blank">
+          https://github.com/victorgveloso/SOEN390-TestTutorial</a>
+      </li>
+      <li>
+        <strong>Flutter E2E in CI/CD Demo:</strong> <a href="https://github.com/pouryafard75/tutorial2" target="_blank">
+          https://github.com/pouryafard75/tutorial2</a> (Copy <code>e2e-android.yml</code> to <code>.github/workflows/</code>)
+      </li>
+      <li>
+        <strong>Writing Test Cases:</strong> Explore examples and expand upon them in your own projects.
+      </li>
+    </ul>
+    <p>
+      Tests can be run on the iOS Simulator, Android Emulator, or on real devices.
+    </p>
+    <p>
+      Beyond simply running the tests, pay attention to how the framework handles synchronization, concurrency, and varied device states. These demos illustrate how to systematically address flakiness and environment-specific issues through proper test orchestration.
+    </p>
+  </section>
+
+  <section id="resources">
+    <h2 class="section-title">Additional Resources</h2>
+    <ul>
+      <li><a href="https://martinfowler.com/articles/improving-testability.html" target="_blank">Martin Fowler on the Test Pyramid</a></li>
+      <li><a href="https://www.browserstack.com" target="_blank">BrowserStack</a> (for insights on testing flakiness)</li>
+      <li><a href="https://docs.expo.dev/guides/testing-with-maestro/" target="_blank">Expo & Maestro Documentation</a> for further details on cross-platform test strategies.</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2 class="section-title">Questions?</h2>
+    <p>
+      If you have any questions, comments, or feedback, feel free to open an issue on the repository or contact the presenter directly.
+    </p>
+    <p>
+      Happy Testing!
+    </p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Victor Guerra Veloso &amp; Contributors. Licensed under the MIT License.</p>
+  </footer>
+
+</body>
+</html>
